@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <title>AR Video Markers</title>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
@@ -12,66 +14,65 @@
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
       embedded
     >
+      <!-- 預載所有影片 -->
       <a-assets>
-        <video id="v1" src="./assets/video1.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
-        <video id="v2" src="./assets/video2.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
-        <video id="v3" src="./assets/video3.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
-        <video id="v4" src="./assets/video4.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
-        <video id="v5" src="./assets/video5.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
-        <video id="v6" src="./assets/video6.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
+        <video id="vid1" src="./assets/video1.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
+        <video id="vid2" src="./assets/video2.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
+        <video id="vid3" src="./assets/video3.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
+        <video id="vid4" src="./assets/video4.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
+        <video id="vid5" src="./assets/video5.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
+        <video id="vid6" src="./assets/video6.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
       </a-assets>
 
       <!-- Marker 1 -->
       <a-marker type="pattern" url="assets/m01.patt">
-        <a-video src="#v1" width="2" height="1" rotation="-90 0 0"></a-video>
+        <a-video src="#vid1" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
       </a-marker>
 
       <!-- Marker 2 -->
       <a-marker type="pattern" url="assets/m02.patt">
-        <a-video src="#v2" width="2" height="1" rotation="-90 0 0"></a-video>
+        <a-video src="#vid2" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
       </a-marker>
 
       <!-- Marker 3 -->
       <a-marker type="pattern" url="assets/m03.patt">
-        <a-video src="#v3" width="2" height="1" rotation="-90 0 0"></a-video>
+        <a-video src="#vid3" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
       </a-marker>
 
       <!-- Marker 4 -->
       <a-marker type="pattern" url="assets/m04.patt">
-        <a-video src="#v4" width="2" height="1" rotation="-90 0 0"></a-video>
+        <a-video src="#vid4" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
       </a-marker>
 
       <!-- Marker 5 -->
       <a-marker type="pattern" url="assets/m05.patt">
-        <a-video src="#v5" width="2" height="1" rotation="-90 0 0"></a-video>
+        <a-video src="#vid5" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
       </a-marker>
 
       <!-- Marker 6 -->
       <a-marker type="pattern" url="assets/m06.patt">
-        <a-video src="#v6" width="2" height="1" rotation="-90 0 0"></a-video>
+        <a-video src="#vid6" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
       </a-marker>
 
-      <a-entity light="type: ambient; intensity: 1"></a-entity>
-      <a-entity light="type: directional; intensity: 1.2" position="1 1 0"></a-entity>
       <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-      const videos = [
-        document.querySelector("#v1"),
-        document.querySelector("#v2"),
-        document.querySelector("#v3"),
-        document.querySelector("#v4"),
-        document.querySelector("#v5"),
-        document.querySelector("#v6")
-      ];
+      // 自動播放處理（避免瀏覽器阻擋）
+      document.addEventListener("click", function () {
+        const vids = document.querySelectorAll("video");
+        vids.forEach(v => v.play().catch(() => {}));
+      });
 
-      document.querySelectorAll("a-marker").forEach((marker, i) => {
+      // 標記事件監聽（marker found → 播放影片, marker lost → 暫停影片）
+      const markers = document.querySelectorAll("a-marker");
+      markers.forEach((marker, index) => {
+        const vid = document.querySelector(`#vid${index + 1}`);
         marker.addEventListener("markerFound", () => {
-          videos[i].play();
+          vid.play();
         });
         marker.addEventListener("markerLost", () => {
-          videos[i].pause();
+          vid.pause();
         });
       });
     </script>
