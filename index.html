@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+  </head>
+
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene
+      vr-mode-ui="enabled: false;"
+      loading-screen="enabled: false;"
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      embedded
+      gesture-detector
+    >
+      <!-- video -->
+      <a-assets>
+        <video id="v1" src="./assets/video1.mp4" preload="auto" crossorigin="anonymous" loop></video>
+        <video id="v2" src="./assets/video2.mp4" preload="auto" crossorigin="anonymous" loop></video>
+        <video id="v3" src="./assets/video3.mp4" preload="auto" crossorigin="anonymous" loop></video>
+        <video id="v4" src="./assets/video4.mp4" preload="auto" crossorigin="anonymous" loop></video>
+        <video id="v5" src="./assets/video5.mp4" preload="auto" crossorigin="anonymous" loop></video>
+        <video id="v6" src="./assets/video6.mp4" preload="auto" crossorigin="anonymous" loop></video>
+      </a-assets>
+
+      <!-- Marker 1 -->
+      <a-marker type="pattern" url="assets/m01.patt">
+        <a-video src="#v1" width="2" height="1" rotation="-90 0 0" position="0 0 0"></a-video>
+      </a-marker>
+
+      <!-- Marker 2 -->
+      <a-marker type="pattern" url="assets/m02.patt">
+        <a-video src="#v2" width="2" height="1" rotation="-90 0 0" position="0 0 0"></a-video>
+      </a-marker>
+
+      <!-- Marker 3 -->
+      <a-marker type="pattern" url="assets/m03.patt">
+        <a-video src="#v3" width="2" height="1" rotation="-90 0 0" position="0 0 0"></a-video>
+      </a-marker>
+
+      <!-- Marker 4 -->
+      <a-marker type="pattern" url="assets/m04.patt">
+        <a-video src="#v4" width="2" height="1" rotation="-90 0 0" position="0 0 0"></a-video>
+      </a-marker>
+
+      <!-- Marker 5 -->
+      <a-marker type="pattern" url="assets/m05.patt">
+        <a-video src="#v5" width="2" height="1" rotation="-90 0 0" position="0 0 0"></a-video>
+      </a-marker>
+
+      <!-- Marker 6 -->
+      <a-marker type="pattern" url="assets/m06.patt">
+        <a-video src="#v6" width="2" height="1" rotation="-90 0 0" position="0 0 0"></a-video>
+      </a-marker>
+
+      <!-- light & camera -->
+      <a-entity light="type: ambient; intensity: 1"></a-entity>
+      <a-entity light="type: directional; intensity: 1.2" position="1 1 0"></a-entity>
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <!-- auto play -->
+    <script>
+      const videos = [
+        document.querySelector("#v1"),
+        document.querySelector("#v2"),
+        document.querySelector("#v3"),
+        document.querySelector("#v4"),
+        document.querySelector("#v5"),
+        document.querySelector("#v6")
+      ];
+
+      // when marker appear, video play; if marker disappear, video pause
+      document.querySelectorAll("a-marker").forEach((marker, i) => {
+        marker.addEventListener("markerFound", () => {
+          videos[i].play();
+        });
+        marker.addEventListener("markerLost", () => {
+          videos[i].pause();
+        });
+      });
+    </script>
+  </body>
+</html>
