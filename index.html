@@ -2,87 +2,102 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>AR Video Markers</title>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
 
   <body style="margin: 0; overflow: hidden;">
     <a-scene
-      vr-mode-ui="enabled: false;"
-      loading-screen="enabled: false;"
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      vr-mode-ui="enabled: false"
+      loading-screen="enabled: false"
       embedded
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
     >
-      <!-- preload -->
       <a-assets>
-        <video id="vid1" src="./assets/video1.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
-        <video id="vid2" src="./assets/video2.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
-        <video id="vid3" src="./assets/video3.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
-        <video id="vid4" src="./assets/video4.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
-        <video id="vid5" src="./assets/video5.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
-        <video id="vid6" src="./assets/video6.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
+        <video
+          id="vid1"
+          src="./assets/video1.mp4"
+          preload="auto"
+          loop
+          muted
+          playsinline
+          webkit-playsinline
+          crossorigin="anonymous"
+        ></video>
+        <video
+          id="vid2"
+          src="./assets/video2.mp4"
+          preload="auto"
+          loop
+          muted
+          playsinline
+          webkit-playsinline
+          crossorigin="anonymous"
+        ></video>
       </a-assets>
 
       <!-- Marker 1 -->
-      <a-marker type="pattern" url="assets/m01.patt">
-        <a-video src="#vid1" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
+      <a-marker
+        type="pattern"
+        url="assets/m01.patt"
+        emitevents="true"
+        id="marker1"
+      >
+        <a-video
+          src="#vid1"
+          width="2"
+          height="1.125"
+          rotation="-90 0 0"
+          autoplay="true"
+          visible="true"
+        ></a-video>
       </a-marker>
 
       <!-- Marker 2 -->
-      <a-marker type="pattern" url="assets/m02.patt">
-        <a-video src="#vid2" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
-      </a-marker>
-
-      <!-- Marker 3 -->
-      <a-marker type="pattern" url="assets/m03.patt">
-        <a-video src="#vid3" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
-      </a-marker>
-
-      <!-- Marker 4 -->
-      <a-marker type="pattern" url="assets/m04.patt">
-        <a-video src="#vid4" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
-      </a-marker>
-
-      <!-- Marker 5 -->
-      <a-marker type="pattern" url="assets/m05.patt">
-        <a-video src="#vid5" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
-      </a-marker>
-
-      <!-- Marker 6 -->
-      <a-marker type="pattern" url="assets/m06.patt">
-        <a-video src="#vid6" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
+      <a-marker
+        type="pattern"
+        url="assets/m02.patt"
+        emitevents="true"
+        id="marker2"
+      >
+        <a-video
+          src="#vid2"
+          width="2"
+          height="1.125"
+          rotation="-90 0 0"
+          autoplay="true"
+          visible="true"
+        ></a-video>
       </a-marker>
 
       <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-      // auto play
-      document.addEventListener("click", function () {
-        const vids = document.querySelectorAll("video");
-        vids.forEach(v => v.play().catch(() => {}));
+      const videos = document.querySelectorAll("video");
+      videos.forEach(v => {
+        v.muted = true;
+        v.play().catch(() => {}); 
       });
 
-      // marker found play
-      const markers = document.querySelectorAll("a-marker");
-      markers.forEach((marker, index) => {
-        const vid = document.querySelector(`#vid${index + 1}`);
-        marker.addEventListener("markerFound", () => {
-          vid.play();
-        });
-        marker.addEventListener("markerLost", () => {
-          vid.pause();
-        });
+      const scene = document.querySelector("a-scene");
+
+      scene.addEventListener("markerFound", (e) => {
+        const markerId = e.target.id;
+        console.log("Marker Found:", markerId);
+        const vid = document.querySelector(`#${markerId.replace("marker", "vid")}`);
+        if (vid) {
+          vid.play().then(() => console.log("play:", vid.id));
+        }
       });
-      // touch to play
-      document.addEventListener("click", function () {
-        const vids = document.querySelectorAll("video");
-        vids.forEach(v => {
-          v.muted = true;
-          v.play().catch(() => {});
-        });
-        alert("touch success");
+
+      scene.addEventListener("markerLost", (e) => {
+        const markerId = e.target.id;
+        console.log("Marker Lost:", markerId);
+        const vid = document.querySelector(`#${markerId.replace("marker", "vid")}`);
+        if (vid) {
+          vid.pause();
+        }
       });
     </script>
   </body>
