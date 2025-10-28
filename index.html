@@ -14,7 +14,7 @@
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
       embedded
     >
-      <!-- 預載所有影片 -->
+      <!-- preload -->
       <a-assets>
         <video id="vid1" src="./assets/video1.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
         <video id="vid2" src="./assets/video2.mp4" preload="auto" crossorigin="anonymous" playsinline></video>
@@ -26,45 +26,45 @@
 
       <!-- Marker 1 -->
       <a-marker type="pattern" url="assets/m01.patt">
-        <a-video src="#vid1" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
+        <a-video src="#vid1" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
       </a-marker>
 
       <!-- Marker 2 -->
       <a-marker type="pattern" url="assets/m02.patt">
-        <a-video src="#vid2" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
+        <a-video src="#vid2" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
       </a-marker>
 
       <!-- Marker 3 -->
       <a-marker type="pattern" url="assets/m03.patt">
-        <a-video src="#vid3" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
+        <a-video src="#vid3" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
       </a-marker>
 
       <!-- Marker 4 -->
       <a-marker type="pattern" url="assets/m04.patt">
-        <a-video src="#vid4" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
+        <a-video src="#vid4" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
       </a-marker>
 
       <!-- Marker 5 -->
       <a-marker type="pattern" url="assets/m05.patt">
-        <a-video src="#vid5" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
+        <a-video src="#vid5" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
       </a-marker>
 
       <!-- Marker 6 -->
       <a-marker type="pattern" url="assets/m06.patt">
-        <a-video src="#vid6" width="2" height="1.125" rotation="-90 0 0" autoplay></a-video>
+        <a-video src="#vid6" width="2" height="1.125" rotation="-90 0 0" autoplay="true" visible="true"></a-video>
       </a-marker>
 
       <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-      // 自動播放處理（避免瀏覽器阻擋）
+      // auto play
       document.addEventListener("click", function () {
         const vids = document.querySelectorAll("video");
         vids.forEach(v => v.play().catch(() => {}));
       });
 
-      // 標記事件監聽（marker found → 播放影片, marker lost → 暫停影片）
+      // marker found play
       const markers = document.querySelectorAll("a-marker");
       markers.forEach((marker, index) => {
         const vid = document.querySelector(`#vid${index + 1}`);
@@ -74,6 +74,15 @@
         marker.addEventListener("markerLost", () => {
           vid.pause();
         });
+      });
+      // touch to play
+      document.addEventListener("click", function () {
+        const vids = document.querySelectorAll("video");
+        vids.forEach(v => {
+          v.muted = true;
+          v.play().catch(() => {});
+        });
+        alert("touch success");
       });
     </script>
   </body>
